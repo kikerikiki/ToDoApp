@@ -1,0 +1,45 @@
+﻿@model ToDoApplication.Models.Todo
+
+@{
+    ViewData["Title"] = "Todo Details";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4" style="color: #8080FF;">@ViewData["Title"]</h2>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-header text-white" style="background-color: #8080FF;">
+            <h4 class="mb-0">@Model.Title</h4>
+        </div>
+        <div class="card-body">
+            <p class="card-text text-muted">@Model.Description</p>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <strong>Datum:</strong> @Model.DueDate?.ToString("dd.MM.yyyy")
+                </li>
+                <li class="list-group-item">
+                    <strong>Erledigt:</strong>
+                    <span class="badge @(Model.IsCompleted ? "bg-success" : "bg-warning text-dark")">
+                        @(Model.IsCompleted ? "Ja" : "Nein")
+                    </span>
+                </li>
+            </ul>
+            <div class="mt-4">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning me-2">Bearbeiten</a>
+                <a asp-action="Index" class="btn btn-outline-secondary">Zurück zur Liste</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .card-text {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+</style>

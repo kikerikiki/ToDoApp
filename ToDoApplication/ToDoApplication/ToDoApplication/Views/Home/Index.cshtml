@@ -1,0 +1,62 @@
+﻿@model IEnumerable<GroupedTodos>
+
+<div class="container mt-5">
+    <!-- Überschrift mit lila Farbe -->
+    <h2 class="mb-4" style="color: #8080FF;">@ViewData["Title"]</h2>
+
+    <div class="d-flex justify-content-between mb-3">
+        <a asp-action="Create" class="btn btn-success">Neues Todo hinzufügen</a>
+        <a asp-action="PastTodos" class="btn btn-outline-secondary">Vergangene Todos anzeigen</a>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        foreach (var monthGroup in Model)
+        {
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header" style="background-color: #8080FF; color: white;">
+                    <h4 class="mb-0">@monthGroup.Year - @monthGroup.Month.ToString("D2")</h4>
+                </div>
+                <div class="card-body">
+                    @foreach (var weekGroup in monthGroup.Weeks)
+                    {
+                        <h5 class="text-secondary">@($"{weekGroup.Key}. Woche")</h5>
+                        <ul class="list-group mb-3">
+                            @foreach (var item in weekGroup)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <form asp-action="ToggleCompletion" method="post" class="d-inline m-0">
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <input type="checkbox" class="form-check-input me-2 checkbox-adjust" name="isCompleted" value="true" onchange="this.form.submit()" @(item.IsCompleted ? "checked" : "") />
+                                    </form>
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="flex-fill ms-2 text-decoration-none @(item.IsCompleted ? "completed-task" : "")">
+                                        @item.Title
+                                    </a>
+                                    <span class="badge rounded-pill @(item.IsCompleted ? "bg-success" : "bg-warning text-dark")">
+                                        @(item.IsCompleted ? "Erledigt" : "Offen")
+                                    </span>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p class="text-center text-muted">Keine aktuellen Todos verfügbar</p>
+    }
+</div>
+
+<style>
+    .completed-task {
+        text-decoration: line-through;
+        color: grey;
+    }
+
+    .form-check-input.checkbox-adjust {
+        transform: translate(5px, -12px); /* Verschiebt die Checkbox leicht nach oben und nach rechts */
+        cursor: pointer;
+    }
+</style>

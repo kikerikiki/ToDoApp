@@ -1,0 +1,50 @@
+﻿@model IEnumerable<GroupedTodos>
+
+<h2>@ViewData["Title"]</h2>
+
+@if (Model != null && Model.Any())
+{
+    foreach (var monthGroup in Model)
+    {
+        <div class="container mb-4 p-3 border rounded">
+            <h3>@(new DateTime(monthGroup.Year, monthGroup.Month, 1).ToString("MMMM yyyy"))</h3>
+            @foreach (var weekGroup in monthGroup.Weeks)
+            {
+                <h4>@($"{weekGroup.Key}. Woche")</h4>
+                <ul class="list-group">
+                    @foreach (var item in weekGroup)
+                    {
+                        <li class="list-group-item">
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    <span class="form-check-input"></span> 
+                                </div>
+                                <div class="col">
+                                    <span class="text-decoration-none @(item.IsCompleted ? "completed-task" : "")">
+                                        @item.Title
+                                    </span>
+                                </div>
+                                <div class="col-auto">
+                                    <span class="badge @(item.IsCompleted ? "badge-success" : "badge-secondary")">
+                                        @(item.IsCompleted ? "Erledigt" : "Offen")
+                                    </span>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    }
+}
+else
+{
+    <p class="text-center">Keine vergangenen Todos verfügbar.</p>
+}
+
+<style>
+    .completed-task {
+        text-decoration: line-through;
+        color: grey;
+    }
+</style>
